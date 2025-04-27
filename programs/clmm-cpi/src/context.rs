@@ -28,7 +28,7 @@ pub struct CreatePool<'info> {
         payer = pool_creator,
         space = PoolState::LEN
     )]
-    pub pool_state: AccountLoader<'info, PoolState>,
+    pub pool_state: Box<AccountLoader<'info, PoolState>>,
 
     /// Token_0 mint, the key must smaller then token_1 mint.
     #[account(
@@ -92,7 +92,7 @@ pub struct CreatePool<'info> {
         payer = pool_creator,
         space = ObservationState::LEN
     )]
-    pub observation_state: AccountLoader<'info, ObservationState>,
+    pub observation_state: Box<AccountLoader<'info, ObservationState>>,
 
     /// Initialize an account to store if a tick array is initialized.
     #[account(
@@ -105,16 +105,16 @@ pub struct CreatePool<'info> {
         payer = pool_creator,
         space = TickArrayBitmapExtension::LEN
     )]
-    pub tick_array_bitmap: AccountLoader<'info, TickArrayBitmapExtension>,
+    pub tick_array_bitmap: Box<AccountLoader<'info, TickArrayBitmapExtension>>,
 
     /// Spl token program or token program 2022
-    pub token_program_0: Interface<'info, TokenInterface>,
+    pub token_program_0: Box<Interface<'info, TokenInterface>>,
     /// Spl token program or token program 2022
-    pub token_program_1: Interface<'info, TokenInterface>,
+    pub token_program_1: Box<Interface<'info, TokenInterface>>,
     /// To create a new program account
-    pub system_program: Program<'info, System>,
+    pub system_program: Box<Program<'info, System>>,
     /// Sysvar for program account
-    pub rent: Sysvar<'info, Rent>,
+    pub rent: Box<Sysvar<'info, Rent>>,
 }
 
 #[derive(Accounts)]
@@ -157,7 +157,7 @@ pub struct OpenPosition<'info> {
 
     /// Add liquidity for this pool
     #[account(mut)]
-    pub pool_state: AccountLoader<'info, PoolState>,
+    pub pool_state: Box<AccountLoader<'info, PoolState>>,
 
     /// Store the information of market marking in range
     #[account(
@@ -237,19 +237,19 @@ pub struct OpenPosition<'info> {
     pub token_vault_1: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Sysvar for token mint and ATA creation
-    pub rent: Sysvar<'info, Rent>,
+    pub rent: Box<Sysvar<'info, Rent>>,
 
     /// Program to create the position manager state account
-    pub system_program: Program<'info, System>,
+    pub system_program: Box<Program<'info, System>>,
 
     /// Program to create mint account and mint tokens
-    pub token_program: Program<'info, Token>,
+    pub token_program: Box<Program<'info, Token>>,
     /// Program to create an ATA for receiving position NFT
-    pub associated_token_program: Program<'info, AssociatedToken>,
+    pub associated_token_program: Box<Program<'info, AssociatedToken>>,
 
     /// Program to create NFT metadata
     /// CHECK: Metadata program address constraint applied
-    pub metadata_program: Program<'info, Metadata>,
+    pub metadata_program: Box<Program<'info, Metadata>>,
     // remaining account
     // #[account(
     //     seeds = [
@@ -304,7 +304,7 @@ pub struct OpenPositionV2<'info> {
 
     /// Add liquidity for this pool
     #[account(mut)]
-    pub pool_state: AccountLoader<'info, PoolState>,
+    pub pool_state: Box<AccountLoader<'info, PoolState>>,
 
     /// Store the information of market marking in range
     #[account(
@@ -384,21 +384,21 @@ pub struct OpenPositionV2<'info> {
     pub token_vault_1: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Sysvar for token mint and ATA creation
-    pub rent: Sysvar<'info, Rent>,
+    pub rent: Box<Sysvar<'info, Rent>>,
 
     /// Program to create the position manager state account
-    pub system_program: Program<'info, System>,
+    pub system_program: Box<Program<'info, System>>,
 
     /// Program to create mint account and mint tokens
-    pub token_program: Program<'info, Token>,
+    pub token_program: Box<Program<'info, Token>>,
     /// Program to create an ATA for receiving position NFT
-    pub associated_token_program: Program<'info, AssociatedToken>,
+    pub associated_token_program: Box<Program<'info, AssociatedToken>>,
 
     /// Program to create NFT metadata
     /// CHECK: Metadata program address constraint applied
-    pub metadata_program: Program<'info, Metadata>,
+    pub metadata_program: Box<Program<'info, Metadata>>,
     /// Program to create mint account and mint tokens
-    pub token_program_2022: Program<'info, Token2022>,
+    pub token_program_2022: Box<Program<'info, Token2022>>,
     /// The mint of token vault 0
     #[account(
         address = token_vault_0.mint
@@ -440,7 +440,7 @@ pub struct OpenPositionWithToken22Nft<'info> {
 
     /// Add liquidity for this pool
     #[account(mut)]
-    pub pool_state: AccountLoader<'info, PoolState>,
+    pub pool_state: Box<AccountLoader<'info, PoolState>>,
 
     /// Store the information of market marking in range
     #[account(
@@ -520,19 +520,19 @@ pub struct OpenPositionWithToken22Nft<'info> {
     pub token_vault_1: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Sysvar for token mint and ATA creation
-    pub rent: Sysvar<'info, Rent>,
+    pub rent: Box<Sysvar<'info, Rent>>,
 
     /// Program to create the position manager state account
-    pub system_program: Program<'info, System>,
+    pub system_program: Box<Program<'info, System>>,
 
     /// Program to transfer for token account
-    pub token_program: Program<'info, Token>,
+    pub token_program: Box<Program<'info, Token>>,
 
     /// Program to create an ATA for receiving position NFT
-    pub associated_token_program: Program<'info, AssociatedToken>,
+    pub associated_token_program: Box<Program<'info, AssociatedToken>>,
 
     /// Program to create NFT mint/token account and transfer for token22 account
-    pub token_program_2022: Program<'info, Token2022>,
+    pub token_program_2022: Box<Program<'info, Token2022>>,
 
     /// The mint of token vault 0
     #[account(
@@ -595,9 +595,9 @@ pub struct ClosePosition<'info> {
     pub personal_position: Box<Account<'info, PersonalPositionState>>,
 
     /// Program to create the position manager state account
-    pub system_program: Program<'info, System>,
+    pub system_program: Box<Program<'info, System>>,
     /// Program to create mint account and mint tokens
-    pub token_program: Program<'info, Token>,
+    pub token_program: Box<Program<'info, Token>>,
     // /// Reserved for upgrade
     // pub token_program_2022: Program<'info, Token2022>,
 }
@@ -614,7 +614,7 @@ pub struct IncreaseLiquidity<'info> {
     pub nft_account: Box<InterfaceAccount<'info, TokenAccount>>,
 
     #[account(mut)]
-    pub pool_state: AccountLoader<'info, PoolState>,
+    pub pool_state: Box<AccountLoader<'info, PoolState>>,
 
     #[account(
         mut,
@@ -635,11 +635,11 @@ pub struct IncreaseLiquidity<'info> {
 
     /// Stores init state for the lower tick
     #[account(mut, constraint = tick_array_lower.load()?.pool_id == pool_state.key())]
-    pub tick_array_lower: AccountLoader<'info, TickArrayState>,
+    pub tick_array_lower: Box<AccountLoader<'info, TickArrayState>>,
 
     /// Stores init state for the upper tick
     #[account(mut, constraint = tick_array_upper.load()?.pool_id == pool_state.key())]
-    pub tick_array_upper: AccountLoader<'info, TickArrayState>,
+    pub tick_array_upper: Box<AccountLoader<'info, TickArrayState>>,
 
     /// The payer's token account for token_0
     #[account(
@@ -670,7 +670,7 @@ pub struct IncreaseLiquidity<'info> {
     pub token_vault_1: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Program to create mint account and mint tokens
-    pub token_program: Program<'info, Token>,
+    pub token_program: Box<Program<'info, Token>>,
     // remaining account
     // #[account(
     //     seeds = [
@@ -695,7 +695,7 @@ pub struct IncreaseLiquidityV2<'info> {
     pub nft_account: Box<InterfaceAccount<'info, TokenAccount>>,
 
     #[account(mut)]
-    pub pool_state: AccountLoader<'info, PoolState>,
+    pub pool_state: Box<AccountLoader<'info, PoolState>>,
 
     #[account(
         mut,
@@ -716,11 +716,11 @@ pub struct IncreaseLiquidityV2<'info> {
 
     /// Stores init state for the lower tick
     #[account(mut, constraint = tick_array_lower.load()?.pool_id == pool_state.key())]
-    pub tick_array_lower: AccountLoader<'info, TickArrayState>,
+    pub tick_array_lower: Box<AccountLoader<'info, TickArrayState>>,
 
     /// Stores init state for the upper tick
     #[account(mut, constraint = tick_array_upper.load()?.pool_id == pool_state.key())]
-    pub tick_array_upper: AccountLoader<'info, TickArrayState>,
+    pub tick_array_upper: Box<AccountLoader<'info, TickArrayState>>,
 
     /// The payer's token account for token_0
     #[account(
@@ -751,10 +751,10 @@ pub struct IncreaseLiquidityV2<'info> {
     pub token_vault_1: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Program to create mint account and mint tokens
-    pub token_program: Program<'info, Token>,
+    pub token_program: Box<Program<'info, Token>>,
 
     /// Token program 2022
-    pub token_program_2022: Program<'info, Token2022>,
+    pub token_program_2022: Box<Program<'info, Token2022>>,
 
     /// The mint of token vault 0
     #[account(
@@ -795,7 +795,7 @@ pub struct DecreaseLiquidity<'info> {
     pub personal_position: Box<Account<'info, PersonalPositionState>>,
 
     #[account(mut)]
-    pub pool_state: AccountLoader<'info, PoolState>,
+    pub pool_state: Box<AccountLoader<'info, PoolState>>,
 
     #[account(
         mut,
@@ -826,11 +826,11 @@ pub struct DecreaseLiquidity<'info> {
 
     /// Stores init state for the lower tick
     #[account(mut, constraint = tick_array_lower.load()?.pool_id == pool_state.key())]
-    pub tick_array_lower: AccountLoader<'info, TickArrayState>,
+    pub tick_array_lower: Box<AccountLoader<'info, TickArrayState>>,
 
     /// Stores init state for the upper tick
     #[account(mut, constraint = tick_array_upper.load()?.pool_id == pool_state.key())]
-    pub tick_array_upper: AccountLoader<'info, TickArrayState>,
+    pub tick_array_upper: Box<AccountLoader<'info, TickArrayState>>,
 
     /// The destination token account for receive amount_0
     #[account(
@@ -847,7 +847,7 @@ pub struct DecreaseLiquidity<'info> {
     pub recipient_token_account_1: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// SPL program to transfer out tokens
-    pub token_program: Program<'info, Token>,
+    pub token_program: Box<Program<'info, Token>>,
     // remaining account
     // #[account(
     //     seeds = [
@@ -876,7 +876,7 @@ pub struct DecreaseLiquidityV2<'info> {
     pub personal_position: Box<Account<'info, PersonalPositionState>>,
 
     #[account(mut)]
-    pub pool_state: AccountLoader<'info, PoolState>,
+    pub pool_state: Box<AccountLoader<'info, PoolState>>,
 
     #[account(
         mut,
@@ -907,11 +907,11 @@ pub struct DecreaseLiquidityV2<'info> {
 
     /// Stores init state for the lower tick
     #[account(mut, constraint = tick_array_lower.load()?.pool_id == pool_state.key())]
-    pub tick_array_lower: AccountLoader<'info, TickArrayState>,
+    pub tick_array_lower: Box<AccountLoader<'info, TickArrayState>>,
 
     /// Stores init state for the upper tick
     #[account(mut, constraint = tick_array_upper.load()?.pool_id == pool_state.key())]
-    pub tick_array_upper: AccountLoader<'info, TickArrayState>,
+    pub tick_array_upper: Box<AccountLoader<'info, TickArrayState>>,
 
     /// The destination token account for receive amount_0
     #[account(
@@ -928,12 +928,12 @@ pub struct DecreaseLiquidityV2<'info> {
     pub recipient_token_account_1: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// SPL program to transfer out tokens
-    pub token_program: Program<'info, Token>,
+    pub token_program: Box<Program<'info, Token>>,
     /// Token program 2022
-    pub token_program_2022: Program<'info, Token2022>,
+    pub token_program_2022: Box<Program<'info, Token2022>>,
 
     /// memo program
-    pub memo_program: Program<'info, Memo>,
+    pub memo_program: Box<Program<'info, Memo>>,
 
     /// The mint of token vault 0
     #[account(
@@ -964,16 +964,16 @@ pub struct SwapRouterBaseIn<'info> {
 
     /// The token account that pays input tokens for the swap
     #[account(mut)]
-    pub input_token_account: InterfaceAccount<'info, TokenAccount>,
+    pub input_token_account: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// The mint of input token
     #[account(mut)]
-    pub input_token_mint: InterfaceAccount<'info, Mint>,
+    pub input_token_mint: Box<InterfaceAccount<'info, Mint>>,
 
     /// SPL program for token transfers
-    pub token_program: Program<'info, Token>,
+    pub token_program: Box<Program<'info, Token>>,
     /// SPL program 2022 for token transfers
-    pub token_program_2022: Program<'info, Token2022>,
+    pub token_program_2022: Box<Program<'info, Token2022>>,
 
     /// CHECK:
     // #[account(
@@ -993,7 +993,7 @@ pub struct SwapSingle<'info> {
 
     /// The program account of the pool in which the swap will be performed
     #[account(mut)]
-    pub pool_state: AccountLoader<'info, PoolState>,
+    pub pool_state: Box<AccountLoader<'info, PoolState>>,
 
     /// The user token account for input token
     #[account(
@@ -1025,13 +1025,13 @@ pub struct SwapSingle<'info> {
 
     /// The program account for the most recent oracle observation
     #[account(mut, address = pool_state.load()?.observation_key)]
-    pub observation_state: AccountLoader<'info, ObservationState>,
+    pub observation_state: Box<AccountLoader<'info, ObservationState>>,
 
     /// SPL program for token transfers
-    pub token_program: Program<'info, Token>,
+    pub token_program: Box<Program<'info, Token>>,
 
     #[account(mut, constraint = tick_array.load()?.pool_id == pool_state.key())]
-    pub tick_array: AccountLoader<'info, TickArrayState>,
+    pub tick_array: Box<AccountLoader<'info, TickArrayState>>,
 }
 
 #[derive(Accounts)]
@@ -1045,7 +1045,7 @@ pub struct SwapSingleV2<'info> {
 
     /// The program account of the pool in which the swap will be performed
     #[account(mut)]
-    pub pool_state: AccountLoader<'info, PoolState>,
+    pub pool_state: Box<AccountLoader<'info, PoolState>>,
 
     /// The user token account for input token
     #[account(mut)]
@@ -1065,16 +1065,16 @@ pub struct SwapSingleV2<'info> {
 
     /// The program account for the most recent oracle observation
     #[account(mut, address = pool_state.load()?.observation_key)]
-    pub observation_state: AccountLoader<'info, ObservationState>,
+    pub observation_state: Box<AccountLoader<'info, ObservationState>>,
 
     /// SPL program for token transfers
-    pub token_program: Program<'info, Token>,
+    pub token_program: Box<Program<'info, Token>>,
 
     /// SPL program 2022 for token transfers
-    pub token_program_2022: Program<'info, Token2022>,
+    pub token_program_2022: Box<Program<'info, Token2022>>,
 
     /// memo program
-    pub memo_program: Program<'info, Memo>,
+    pub memo_program: Box<Program<'info, Memo>>,
 
     /// The mint of token vault 0
     #[account(
@@ -1103,7 +1103,7 @@ pub struct CollectRemainingRewards<'info> {
     pub funder_token_account: Box<InterfaceAccount<'info, TokenAccount>>,
     /// Set reward for this pool
     #[account(mut)]
-    pub pool_state: AccountLoader<'info, PoolState>,
+    pub pool_state: Box<AccountLoader<'info, PoolState>>,
     /// Reward vault transfer remaining token to founder token account
     pub reward_token_vault: Box<InterfaceAccount<'info, TokenAccount>>,
     /// The mint of reward token vault
@@ -1112,17 +1112,17 @@ pub struct CollectRemainingRewards<'info> {
     )]
     pub reward_vault_mint: Box<InterfaceAccount<'info, Mint>>,
     #[account(address = token::ID)]
-    pub token_program: Program<'info, Token>,
+    pub token_program: Box<Program<'info, Token>>,
     /// Token program 2022
-    pub token_program_2022: Program<'info, Token2022>,
+    pub token_program_2022: Box<Program<'info, Token2022>>,
 
     /// memo program
-    pub memo_program: Program<'info, Memo>,
+    pub memo_program: Box<Program<'info, Memo>>,
 }
 
 #[derive(Accounts)]
 pub struct UpdateRewardInfos<'info> {
     /// The liquidity pool for which reward info to update
     #[account(mut)]
-    pub pool_state: AccountLoader<'info, PoolState>,
+    pub pool_state: Box<AccountLoader<'info, PoolState>>,
 }
