@@ -170,9 +170,9 @@ pub struct OpenPosition<'info> {
         ],
         bump,
         payer = payer,
-        space = ProtocolPositionState::LEN
+        // zero‐copy loader
     )]
-    pub protocol_position: Box<Account<'info, ProtocolPositionState>>,
+    pub protocol_position: AccountLoader<'info, ProtocolPositionState>>,
 
     /// CHECK: Account to store data for the position's lower tick
     #[account(
@@ -184,7 +184,7 @@ pub struct OpenPosition<'info> {
         ],
         bump,
     )]
-    pub tick_array_lower: UncheckedAccount<'info>,
+    pub tick_array_lower: AccountLoader<'info, TickArrayState>,
 
     /// CHECK: Account to store data for the position's upper tick
     #[account(
@@ -196,7 +196,7 @@ pub struct OpenPosition<'info> {
         ],
         bump,
     )]
-    pub tick_array_upper: UncheckedAccount<'info>,
+    pub tick_array_upper: AccountLoader<'info, TickArrayState>,
 
     /// personal position state
     #[account(
@@ -204,9 +204,9 @@ pub struct OpenPosition<'info> {
         seeds = [POSITION_SEED.as_bytes(), position_nft_mint.key().as_ref()],
         bump,
         payer = payer,
-        space = PersonalPositionState::LEN
+        // zero‐copy loader
     )]
-    pub personal_position: Box<Account<'info, PersonalPositionState>>,
+    pub personal_position: AccountLoader<'info, PersonalPositionState>,
 
     /// The user token_0 account deposit token to the pool
     #[account(
@@ -317,9 +317,9 @@ pub struct OpenPositionV2<'info> {
         ],
         bump,
         payer = payer,
-        space = ProtocolPositionState::LEN
+        // zero‐copy loader
     )]
-    pub protocol_position: Box<Account<'info, ProtocolPositionState>>,
+    pub protocol_position: AccountLoader<'info, ProtocolPositionState>,
 
     /// CHECK: Account to store data for the position's lower tick
     #[account(
@@ -331,7 +331,7 @@ pub struct OpenPositionV2<'info> {
         ],
         bump,
     )]
-    pub tick_array_lower: UncheckedAccount<'info>,
+    pub tick_array_lower: AccountLoader<'info, TickArrayState>,
 
     /// CHECK: Account to store data for the position's upper tick
     #[account(
@@ -343,7 +343,7 @@ pub struct OpenPositionV2<'info> {
         ],
         bump,
     )]
-    pub tick_array_upper: UncheckedAccount<'info>,
+    pub tick_array_upper: AccountLoader<'info, TickArrayState>,
 
     /// personal position state
     #[account(
@@ -351,9 +351,9 @@ pub struct OpenPositionV2<'info> {
         seeds = [POSITION_SEED.as_bytes(), position_nft_mint.key().as_ref()],
         bump,
         payer = payer,
-        space = PersonalPositionState::LEN
+        // zero‐copy loader
     )]
-    pub personal_position: Box<Account<'info, PersonalPositionState>>,
+    pub personal_position: AccountLoader<'info, PersonalPositionState>,
 
     /// The user token_0 account deposit token to the pool
     #[account(
