@@ -1,11 +1,12 @@
 use crate::states::*;
-use anchor_lang::prelude::*;
+use anchor_lang::{prelude::*, Bumps};
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::memo::Memo;
 use anchor_spl::metadata::Metadata;
 use anchor_spl::token;
 use anchor_spl::token::Token;
 use anchor_spl::token_interface::{Mint, Token2022, TokenAccount, TokenInterface};
+
 #[derive(Accounts, Bumps)]
 pub struct CreatePool<'info> {
     /// Address paying to create the pool. Can be anyone
