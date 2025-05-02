@@ -1,13 +1,14 @@
 use crate::states::*;
-use anchor_lang::{prelude::*, Bumps};
+use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
+use anchor_spl::token_interface::InterfaceAccount;
 use anchor_spl::memo::Memo;
 use anchor_spl::metadata::Metadata;
 use anchor_spl::token;
 use anchor_spl::token::Token;
 use anchor_spl::token_interface::{Mint, Token2022, TokenAccount, TokenInterface};
 
-#[derive(Accounts, Bumps)]
+#[derive(Accounts)]
 pub struct CreatePool<'info> {
     /// Address paying to create the pool. Can be anyone
     #[account(mut)]
@@ -29,7 +30,7 @@ pub struct CreatePool<'info> {
         payer = pool_creator,
         space = PoolState::LEN
     )]
-    pub pool_state: Box<AccountLoader<'info, PoolState>>,
+    pub pool_state: AccountLoader<'info, PoolState>,
 
     /// Token_0 mint, the key must smaller then token_1 mint.
     #[account(
@@ -118,7 +119,7 @@ pub struct CreatePool<'info> {
     pub rent: Sysvar<'info, Rent>,
 }
 
-#[derive(Accounts, Bumps)]
+#[derive(Accounts)]
 #[instruction(tick_lower_index: i32, tick_upper_index: i32,tick_array_lower_start_index:i32,tick_array_upper_start_index:i32)]
 pub struct OpenPosition<'info> {
     /// Pays to mint the position
@@ -158,7 +159,7 @@ pub struct OpenPosition<'info> {
 
     /// Add liquidity for this pool
     #[account(mut)]
-    pub pool_state: Box<AccountLoader<'info, PoolState>>,
+    pub pool_state: AccountLoader<'info, PoolState>,
 
     /// Store the information of market marking in range
     #[account(
@@ -171,9 +172,9 @@ pub struct OpenPosition<'info> {
         ],
         bump,
         payer = payer,
-        // zero‐copy loader
+        space = ProtocolPositionState::LEN
     )]
-    pub protocol_position: AccountLoader<'info, ProtocolPositionState>>,
+    pub protocol_position: Box<Account<'info, ProtocolPositionState>>,
 
     /// CHECK: Account to store data for the position's lower tick
     #[account(
@@ -262,7 +263,7 @@ pub struct OpenPosition<'info> {
     // pub tick_array_bitmap: AccountLoader<'info, TickArrayBitmapExtension>,
 }
 
-#[derive(Accounts, Bumps)]
+#[derive(Accounts)]
 #[instruction(tick_lower_index: i32, tick_upper_index: i32,tick_array_lower_start_index:i32,tick_array_upper_start_index:i32)]
 pub struct OpenPositionV2<'info> {
     /// Pays to mint the position
@@ -305,7 +306,7 @@ pub struct OpenPositionV2<'info> {
 
     /// Add liquidity for this pool
     #[account(mut)]
-    pub pool_state: Box<AccountLoader<'info, PoolState>>,
+    pub pool_state: AccountLoader<'info, PoolState>,
 
     /// Store the information of market marking in range
     #[account(
@@ -318,9 +319,9 @@ pub struct OpenPositionV2<'info> {
         ],
         bump,
         payer = payer,
-        // zero‐copy loader
+        space = ProtocolPositionState::LEN
     )]
-    pub protocol_position: AccountLoader<'info, ProtocolPositionState>,
+    pub protocol_position: Box<Account<'info, ProtocolPositionState>>,
 
     /// CHECK: Account to store data for the position's lower tick
     #[account(
@@ -421,7 +422,7 @@ pub struct OpenPositionV2<'info> {
     // pub tick_array_bitmap: AccountLoader<'info, TickArrayBitmapExtension>,
 }
 
-#[derive(Accounts, Bumps)]
+#[derive(Accounts)]
 #[instruction(tick_lower_index: i32, tick_upper_index: i32,tick_array_lower_start_index:i32,tick_array_upper_start_index:i32)]
 pub struct OpenPositionWithToken22Nft<'info> {
     /// Pays to mint the position
@@ -441,7 +442,7 @@ pub struct OpenPositionWithToken22Nft<'info> {
 
     /// Add liquidity for this pool
     #[account(mut)]
-    pub pool_state: Box<AccountLoader<'info, PoolState>>,
+    pub pool_state: AccountLoader<'info, PoolState>,
 
     /// Store the information of market marking in range
     #[account(
@@ -557,7 +558,7 @@ pub struct OpenPositionWithToken22Nft<'info> {
     // pub tick_array_bitmap: AccountLoader<'info, TickArrayBitmapExtension>,
 }
 
-#[derive(Accounts, Bumps)]
+#[derive(Accounts)]
 pub struct ClosePosition<'info> {
     /// The position nft owner
     #[account(mut)]
@@ -603,7 +604,7 @@ pub struct ClosePosition<'info> {
     // pub token_program_2022: Program<'info, Token2022>,
 }
 
-#[derive(Accounts, Bumps)]
+#[derive(Accounts)]
 pub struct IncreaseLiquidity<'info> {
     /// Pays to mint the position
     pub nft_owner: Signer<'info>,
@@ -615,7 +616,7 @@ pub struct IncreaseLiquidity<'info> {
     pub nft_account: Box<InterfaceAccount<'info, TokenAccount>>,
 
     #[account(mut)]
-    pub pool_state: Box<AccountLoader<'info, PoolState>>,
+    pub pool_state: AccountLoader<'info, PoolState>,
 
     #[account(
         mut,
@@ -683,7 +684,7 @@ pub struct IncreaseLiquidity<'info> {
     // pub tick_array_bitmap: AccountLoader<'info, TickArrayBitmapExtension>,
 }
 
-#[derive(Accounts, Bumps)]
+#[derive(Accounts)]
 pub struct IncreaseLiquidityV2<'info> {
     /// Pays to mint the position
     pub nft_owner: Signer<'info>,
@@ -696,7 +697,7 @@ pub struct IncreaseLiquidityV2<'info> {
     pub nft_account: Box<InterfaceAccount<'info, TokenAccount>>,
 
     #[account(mut)]
-    pub pool_state: Box<AccountLoader<'info, PoolState>>,
+    pub pool_state: AccountLoader<'info, PoolState>,
 
     #[account(
         mut,
@@ -779,7 +780,7 @@ pub struct IncreaseLiquidityV2<'info> {
     // pub tick_array_bitmap: AccountLoader<'info, TickArrayBitmapExtension>,
 }
 
-#[derive(Accounts, Bumps)]
+#[derive(Accounts)]
 pub struct DecreaseLiquidity<'info> {
     /// The position owner or delegated authority
     pub nft_owner: Signer<'info>,
@@ -796,7 +797,7 @@ pub struct DecreaseLiquidity<'info> {
     pub personal_position: Box<Account<'info, PersonalPositionState>>,
 
     #[account(mut)]
-    pub pool_state: Box<AccountLoader<'info, PoolState>>,
+    pub pool_state: AccountLoader<'info, PoolState>,
 
     #[account(
         mut,
@@ -860,7 +861,7 @@ pub struct DecreaseLiquidity<'info> {
     // pub tick_array_bitmap: AccountLoader<'info, TickArrayBitmapExtension>,
 }
 
-#[derive(Accounts, Bumps)]
+#[derive(Accounts)]
 pub struct DecreaseLiquidityV2<'info> {
     /// The position owner or delegated authority
     pub nft_owner: Signer<'info>,
@@ -877,7 +878,7 @@ pub struct DecreaseLiquidityV2<'info> {
     pub personal_position: Box<Account<'info, PersonalPositionState>>,
 
     #[account(mut)]
-    pub pool_state: Box<AccountLoader<'info, PoolState>>,
+    pub pool_state: AccountLoader<'info, PoolState>,
 
     #[account(
         mut,
@@ -958,7 +959,7 @@ pub struct DecreaseLiquidityV2<'info> {
     // pub tick_array_bitmap: AccountLoader<'info, TickArrayBitmapExtension>,
 }
 
-#[derive(Accounts, Bumps)]
+#[derive(Accounts)]
 pub struct SwapRouterBaseIn<'info> {
     /// The user performing the swap
     pub payer: Signer<'info>,
@@ -983,7 +984,7 @@ pub struct SwapRouterBaseIn<'info> {
     pub memo_program: UncheckedAccount<'info>,
 }
 
-#[derive(Accounts, Bumps)]
+#[derive(Accounts)]
 pub struct SwapSingle<'info> {
     /// The user performing the swap
     pub payer: Signer<'info>,
@@ -994,7 +995,7 @@ pub struct SwapSingle<'info> {
 
     /// The program account of the pool in which the swap will be performed
     #[account(mut)]
-    pub pool_state: Box<AccountLoader<'info, PoolState>>,
+    pub pool_state: AccountLoader<'info, PoolState>,
 
     /// The user token account for input token
     #[account(
@@ -1035,7 +1036,7 @@ pub struct SwapSingle<'info> {
     pub tick_array: Box<AccountLoader<'info, TickArrayState>>,
 }
 
-#[derive(Accounts, Bumps)]
+#[derive(Accounts)]
 pub struct SwapSingleV2<'info> {
     /// The user performing the swap
     pub payer: Signer<'info>,
@@ -1046,7 +1047,7 @@ pub struct SwapSingleV2<'info> {
 
     /// The program account of the pool in which the swap will be performed
     #[account(mut)]
-    pub pool_state: Box<AccountLoader<'info, PoolState>>,
+    pub pool_state: AccountLoader<'info, PoolState>,
 
     /// The user token account for input token
     #[account(mut)]
@@ -1095,7 +1096,7 @@ pub struct SwapSingleV2<'info> {
     // tick_array_account_...
 }
 
-#[derive(Accounts, Bumps)]
+#[derive(Accounts)]
 pub struct CollectRemainingRewards<'info> {
     /// The founder who init reward info in berfore
     pub reward_funder: Signer<'info>,
@@ -1104,7 +1105,7 @@ pub struct CollectRemainingRewards<'info> {
     pub funder_token_account: Box<InterfaceAccount<'info, TokenAccount>>,
     /// Set reward for this pool
     #[account(mut)]
-    pub pool_state: Box<AccountLoader<'info, PoolState>>,
+    pub pool_state: AccountLoader<'info, PoolState>,
     /// Reward vault transfer remaining token to founder token account
     pub reward_token_vault: Box<InterfaceAccount<'info, TokenAccount>>,
     /// The mint of reward token vault
@@ -1121,9 +1122,9 @@ pub struct CollectRemainingRewards<'info> {
     pub memo_program: Program<'info, Memo>,
 }
 
-#[derive(Accounts, Bumps)]
+#[derive(Accounts)]
 pub struct UpdateRewardInfos<'info> {
     /// The liquidity pool for which reward info to update
     #[account(mut)]
-    pub pool_state: Box<AccountLoader<'info, PoolState>>,
+    pub pool_state: AccountLoader<'info, PoolState>,
 }
